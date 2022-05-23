@@ -3,6 +3,19 @@ const express = require('express')
 const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
+// const res = require('express/lib/response')
+const mongoose = require('mongoose') // 載入 mongoose
+
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+// 取得資料庫連線狀態
+const db = mongoose.connection
+db.on('error', () => {
+  console.log('mongodb error!')
+})
+db.once('open', () => {
+  console.log('mongodb connected!')
+})
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
@@ -11,6 +24,34 @@ app.set('view engine', 'handlebars')
 app.get('/', (req, res) => {
   res.render('index')
 })
+
+// routes setting 取得input value
+app.get('/shorten', (req, res) => {
+  // 收到長網址 input req.query
+  const original = req.query.original
+  // 1. 比對是否有效
+  function isValidHttpUrl (string) {
+    let url
+
+    try { //試看看這個可能有錯的東西
+      url = new URL(string);
+      //constructor 利用字串建立URL, 可得其屬性
+    } catch (_) { //真的有錯, 就這麼做
+      return false;
+    }
+    // boolean: 回報其協議是htt: 或https:
+    return url.protocol === "http:" || url.protocol === "https:";
+  }
+  console.log(isValidHttpUrl(original))
+
+  // 2. 比對是否有在資料庫
+  // 3. 若有, 取出對應短網址
+  // 4. 若無, 建立短網址進database
+
+
+  res.render('index', { original })
+})
+
 
 app.listen(port, () => {
   console.log(`Express is running on http://localhost:${port}`)
@@ -22,7 +63,7 @@ app.listen(port, () => {
 
 // 流程設計
 // A 將映射關係進行存儲，並可以取出回覆
-// 收到長網址 input req.param req.body ?
+// 收到長網址 input req.query
 // 1. 比對是否有效
 // 2. 比對是否有在資料庫
 // 3. 若有, 取出對應短網址
