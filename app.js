@@ -10,6 +10,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 // 取得資料庫連線狀態
 const db = mongoose.connection
+
 db.on('error', () => {
   console.log('mongodb error!')
 })

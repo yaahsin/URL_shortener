@@ -1,0 +1,24 @@
+{
+  "results": [
+    {
+      "original": "https://tw.alphacamp.co/",
+      "shorten": "AC1225"
+    },
+    {
+      "original": "https://developer.mozilla.org/zh-TW/docs/Web/JavaScript",
+      "shorten": "MDNjavascript"
+    },
+    {
+      "original": "https://learndigital.withgoogle.com/digitalgarage-tw/",
+      "shorten": "4google"
+    },
+    {
+      "original": "https://www.bloomberg.com/businessweek",
+      "shorten": "newsok"
+    },
+    {
+      "original": "https://hahow.in/courses?search=%E7%94%A2%E5%93%81%E7%B6%93%E7%90%86%E8%81%B7%E5%A0%B4%E5%AD%B8%EF%BC%9APM+%E5%BF%85%E4%BF%AE%E7%9A%84%E8%81%B7%E6%B6%AF%E6%8C%87%E5%8D%97%EF%BC%81&page=1",
+      "shorten": "ha0523"
+    }
+  ]
+}
