@@ -4,6 +4,7 @@ const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
 // const res = require('express/lib/response')
+const URLlist = require('./models/URL')
 const mongoose = require('mongoose') // 載入 mongoose
 
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -21,7 +22,7 @@ db.once('open', () => {
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
-
+// route setting 首頁
 app.get('/', (req, res) => {
   res.render('index')
 })
@@ -53,6 +54,18 @@ app.get('/shorten', (req, res) => {
   res.render('index', { original })
 })
 
+app.get('/:shorten', (req, res) => {
+  const shortLink = req.params.shorten
+  URLlist.findOne({ shorten: shortLink })
+    .lean()
+    .then((relink => {
+      if (relink) {
+        console.log(relink)
+        res.status(301).redirect(relink.original)
+      }
+    }))
+    .catch(() => { res.sendStatus(404) })
+})
 
 app.listen(port, () => {
   console.log(`Express is running on http://localhost:${port}`)
