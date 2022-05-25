@@ -38,22 +38,57 @@ app.get('/shorten', (req, res) => {
     try { //試看看這個可能有錯的東西
       url = new URL(string);
       //constructor 利用字串建立URL, 可得其屬性
-    } catch (_) { //真的有錯, 就這麼做
+    } catch (MONGODB_URI) { //真的有錯, 就這麼做
       return false;
     }
     // boolean: 回報其協議是htt: 或https:
     return url.protocol === "http:" || url.protocol === "https:";
   }
-  console.log(isValidHttpUrl(original))
 
-  // 2. 比對是否有在資料庫
-  // 3. 若有, 取出對應短網址
+  if (isValidHttpUrl(original)) {
+    let inputURL = ""
+    let shorten = ""
+    const base = "http://localhost:3000/"
+
+    URLlist.find()
+      .lean()
+      .then((URL) => {
+        inputURL = URL.find((url) => url.original === original)
+        // 2. 比對是否有在資料庫
+        // 3. 若有, 取出對應短網址
+        if (inputURL) {
+          shorten = base + inputURL.shorten
+          console.log(shorten)
+          return res.render('index', { original, shorten })
+        }
+      })
+  } else {
+    console.log("invalid URL")
+  }
+
+
   // 4. 若無, 建立短網址進database
 
-
-  res.render('index', { original })
 })
 
+function Errorlog (e) {
+  console.log(e)
+}
+
+// 比對新的內容
+app.post('/', (req, res) => {
+  const original = req.query.original
+  const base = "http://localhost:3000/"
+
+  URLlist.find()
+    .lean()
+    .then((URL) => {
+      let inputURL = URL.find((url) => url.original === original)
+    })
+
+})
+
+// route setting shorten to original URL 短網址跳轉到長網址
 app.get('/:shorten', (req, res) => {
   const shortLink = req.params.shorten
   URLlist.findOne({ shorten: shortLink })
