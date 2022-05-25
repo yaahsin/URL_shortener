@@ -4,11 +4,14 @@ const express = require('express')
 const router = express.Router()
 const URLlist = require('../../models/URL')
 
+
 // routes setting 取得input value
 router.post('/shorten', (req, res) => {
-  // 收到長網址 input req.query
+  // 收到長網址
   const original = req.body.original
-  // 1. 比對是否有效
+  let message = ""
+
+  // 比對是否有效
   function isValidHttpUrl (string) {
     let url = ""
 
@@ -36,6 +39,8 @@ router.post('/shorten', (req, res) => {
     return str;
   }
 
+  console.log(isValidHttpUrl(original))
+  // 1. 比對是否有效
   if (isValidHttpUrl(original)) {
     let inputURL = ""
     let shorten = ""
@@ -44,14 +49,15 @@ router.post('/shorten', (req, res) => {
     URLlist.find()
       .lean()
       .then((URL) => {
-        inputURL = URL.find((url) => url.original === original)
         // 2. 比對是否有在資料庫
+        inputURL = URL.find((url) => url.original === original)
         // 3. 若有, 取出對應短網址
         if (inputURL) {
           shorten = base + inputURL.shorten
           return res.render('index', { original, shorten })
           // 4. 若無, 建立短網址進database
-        } else {
+        }
+        else {
           shorten = ShortLink()
           URLlist.create({
             original: original,
@@ -60,7 +66,11 @@ router.post('/shorten', (req, res) => {
         }
       })
   } else {
-    console.log("invalid URL")
+    if (!original) {
+      res.redirect("/")
+    }
+    message = "請再確認網址是否正確或有多餘空白！"
+    res.render("index", { message })
   }
 })
 
