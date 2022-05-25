@@ -16,7 +16,7 @@
   <main>
     {{!-- <div class="alert">message flash</div> --}}
     <div class="container text-center">
-      <form action="/shorten">
+      <form action="/shorten" method="POST">
         <div class="input-group input-group-lg mb-3">
           <input type="text" name="original" value="{{original}}" class="form-control"
             placeholder="input website URL here" aria-label="original URL" aria-describedby="button-addon2">
@@ -24,7 +24,7 @@
         </div>
       </form>
       <div class="input-group input-group-lg mb-3">
-        <input type="text" class="form-control" placeholder="Short website URL will be displayed here"
+        <input type="text" name="shorten" class="form-control" placeholder="Short website URL will be displayed here"
           value="{{shorten}}" id="copy" aria-label="shorten URL" aria-describedby="button-addon2">
         <button onclick="copy()" class="btn btn-outline-primary" type="button" id="button-addon2">Copy it!</button>
       </div>
