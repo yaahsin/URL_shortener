@@ -39,7 +39,6 @@ router.post('/shorten', (req, res) => {
     return str;
   }
 
-  console.log(isValidHttpUrl(original))
   // 1. 比對是否有效
   if (isValidHttpUrl(original)) {
     let inputURL = ""
@@ -84,10 +83,9 @@ router.get("/:shorten", (req, res) => {
         console.log(relink);
         res.status(302).redirect(relink.original);
       } else {
-        res.sendStatus(404);
+        res.status(404).render("error")
       }
     })
-    .catch();
 });
 
 module.exports = router
