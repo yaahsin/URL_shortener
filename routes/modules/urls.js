@@ -81,8 +81,10 @@ router.get("/:shorten", (req, res) => {
     .then((relink) => {
       if (relink) {
         console.log(relink);
+        // 302 暫時重定向, 多用於A/B test 活動頁, 不影響原本頁面
         res.status(302).redirect(relink.original);
       } else {
+        // 客製化404 page
         res.status(404).render("error")
       }
     })
